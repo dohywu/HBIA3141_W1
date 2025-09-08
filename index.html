@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <title>도현우 - 소개 (RAW HTML + Float)</title>
+  </head>
+  <body>
+    <!-- 아주 최소한의, 날것의 HTML. (CSS 거의 없음) -->
+
+    <h1>도현우 (D5)</h1>
+    <p>
+      상명대학교 커뮤니케이션디자인전공. 브랜딩, 편집디자인, 타이포그래피,
+      p5.js.
+    </p>
+
+    <hr />
+
+    <h2>프로젝트 하이라이트</h2>
+    <ul>
+      <li>
+        <a href="https://example.com/minmax" target="_blank"
+          >minMAX — 미니멀에서 맥시멀로</a
+        ><br />
+        <small>아카이브 북. 재질·중첩 실험.</small>
+      </li>
+      <li>
+        <a href="https://example.com/digital-candle" target="_blank"
+          >Digital Candle — 인터랙티브 촛불</a
+        ><br />
+        <small>얼굴 제스처로 메시지가 열리는 웹 실험.</small>
+      </li>
+      <li>
+        <a href="https://example.com/cardnews" target="_blank"
+          >Club PR — 카드뉴스</a
+        ><br />
+        <small>반복 가능한 정보 구조 템플릿.</small>
+      </li>
+    </ul>
+
+    <hr />
+
+    <h2>더 보기</h2>
+    <ul>
+      <li>
+        <a href="https://example.com/d5" target="_blank"
+          >d5 스튜디오 아이덴티티</a
+        >
+      </li>
+      <li>
+        <a href="https://example.com/typo" target="_blank"
+          >타이포그래피 아카이빙</a
+        >
+      </li>
+      <li>
+        <a href="https://example.com/p5" target="_blank"
+          >제너러티브 아트 모음</a
+        >
+      </li>
+    </ul>
+
+    <hr />
+
+    <h2>간단 타임라인</h2>
+    <ol>
+      <li>2023–2024: 클럽/브랜딩/카드뉴스.</li>
+      <li>2024–2025: p5.js 확장, 전시/발표, d5 정리.</li>
+      <li>Next: 브랜딩×인터랙티브 접점 연구.</li>
+    </ol>
+
+    <hr />
+
+    <h2>연락</h2>
+    <ul>
+      <li>
+        이메일:
+        <a href="mailto:your.email@example.com">your.email@example.com</a>
+      </li>
+      <li>
+        인스타그램:
+        <a href="https://instagram.com/your_handle" target="_blank"
+          >@your_handle</a
+        >
+      </li>
+      <li>
+        GitHub:
+        <a href="https://github.com/your-github" target="_blank">your-github</a>
+      </li>
+    </ul>
+
+    <hr />
+    <p><small>© 2025 Dohyunwoo · RAW HTML</small></p>
+
+    <!-- ===================== -->
+    <!-- 중앙 '둥실둥실' 3D 구형 플로팅 이미지 -->
+    <!-- ===================== -->
+    <div
+      id="floaters"
+      style="position: fixed; inset: 0; display: block; pointer-events: none"
+    >
+      <!-- JS가 이미지 요소들을 생성/배치합니다. 이 레이어는 클릭을 막지 않습니다. -->
+    </div>
+
+    <script>
+      // 최소 JS만 사용. 외부 라이브러리 없음.
+      // 1) 여기에 이미지 링크들을 채워 주세요.
+      //    예: "https://...jpg" 형태. 비워두면 회색 플레이스홀더 사각형이 나옵니다.
+      const imageLinks = ['', '', '', '', '', '', '', '', '', ''];
+
+      // 2) 구 설정값 (필요하면 숫자만 바꾸세요)
+      const COUNT = imageLinks.length; // 이미지 개수
+      const RADIUS = Math.min(window.innerWidth, window.innerHeight) * 0.28; // 구 반지름(px)
+      const SIZE_MIN = 90; // 이미지 최소 너비(px)
+      const SIZE_MAX = 140; // 이미지 최대 너비(px)
+      const DEPTH = 600; // Z투영 기준(카메라 거리)
+
+      // 상태값
+      let rotX = 0; // X축 회전 각도(라디안)
+      let rotY = 0; // Y축 회전 각도(라디안)
+      let velX = 0; // 마우스에 의해 생긴 회전 속도
+      let velY = 0;
+
+      // 요소 만들기
+      const wrap = document.getElementById('floaters');
+      const items = [];
+      for (let i = 0; i < COUNT; i++) {
+        const el = document.createElement('img');
+        el.decoding = 'async';
+        el.loading = 'lazy';
+        el.alt = 'image';
+        el.src = imageLinks[i] || '';
+        // 아주 최소한의 인라인 스타일만 사용
+        el.style.position = 'absolute';
+        el.style.transformOrigin = 'center center';
+        el.style.willChange = 'transform, opacity';
+        el.style.border = imageLinks[i] ? 'none' : '1px solid #ccc';
+        el.style.background = imageLinks[i] ? 'transparent' : '#eee';
+        el.style.pointerEvents = 'none'; // 아래 콘텐츠 클릭 가능
+        wrap.appendChild(el);
+        items.push({
+          el,
+          theta: Math.acos((2 * (i + 0.5)) / COUNT - 1),
+          phi: Math.PI * (1 + Math.sqrt(5)) * i,
+        }); // 골든 스파이럴로 균등 분포
+      }
+
+      // 윈도우 중앙 좌표
+      function center() {
+        return { cx: window.innerWidth / 2, cy: window.innerHeight / 2 };
+      }
+
+      // 마우스 이동 → 회전 속도에 반영 (아주 가볍게)
+      window.addEventListener('mousemove', (e) => {
+        const { cx, cy } = center();
+        const nx = (e.clientX - cx) / cx; // -1~1
+        const ny = (e.clientY - cy) / cy; // -1~1
+        // 부드럽게 반영 (감쇠 포함)
+        velY = nx * 0.015; // 좌우 → Y축 회전
+        velX = -ny * 0.015; // 상하 → X축 회전
+      });
+
+      // 반응성: 리사이즈 시 반지름 재계산
+      window.addEventListener('resize', () => {
+        const newR = Math.min(window.innerWidth, window.innerHeight) * 0.28;
+        radius.current = newR;
+      });
+      const radius = { current: RADIUS };
+
+      // 애니메이션 루프
+      function tick() {
+        rotX += velX;
+        rotY += velY;
+        velX *= 0.94; // 관성 감쇠
+        velY *= 0.94;
+
+        const { cx, cy } = center();
+
+        for (let i = 0; i < COUNT; i++) {
+          const it = items[i];
+          // 구 좌표
+          const x0 = radius.current * Math.sin(it.theta) * Math.cos(it.phi);
+          const y0 = radius.current * Math.cos(it.theta);
+          const z0 = radius.current * Math.sin(it.theta) * Math.sin(it.phi);
+
+          // 회전 행렬 (XYZ 중 X, Y만 사용)
+          const cosX = Math.cos(rotX),
+            sinX = Math.sin(rotX);
+          const cosY = Math.cos(rotY),
+            sinY = Math.sin(rotY);
+
+          // Y 회전
+          let x1 = cosY * x0 + sinY * z0;
+          let y1 = y0;
+          let z1 = -sinY * x0 + cosY * z0;
+          // X 회전
+          let x2 = x1;
+          let y2 = cosX * y1 - sinX * z1;
+          let z2 = sinX * y1 + cosX * z1;
+
+          // 원근 투영
+          const scale = DEPTH / (DEPTH - z2);
+          const x = cx + x2 * scale;
+          const y = cy + y2 * scale;
+
+          // 크기/투명도: z 기반
+          const w = Math.round(
+            SIZE_MIN +
+              (SIZE_MAX - SIZE_MIN) *
+                ((z2 + radius.current) / (2 * radius.current))
+          );
+          const opacity =
+            0.35 + 0.65 * ((z2 + radius.current) / (2 * radius.current));
+
+          it.el.style.width = w + 'px';
+          it.el.style.left = x - w / 2 + 'px';
+          it.el.style.top = y - w / 2 + 'px';
+          it.el.style.opacity = opacity.toFixed(3);
+        }
+
+        requestAnimationFrame(tick);
+      }
+
+      // 시작
+      requestAnimationFrame(tick);
+    </script>
+  </body>
+</html>
