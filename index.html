@@ -1,45 +1,85 @@
 <!DOCTYPE html>
 <html lang="ko">
   <head>
+    <style>
+      hr.full {
+        border: 0;
+        height: 1px;
+        background: #000;
+        width: 100vw;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      body {
+        margin: 0;
+        margin-top: 0.2em; /* 위쪽 여백 */
+        margin-bottom: 0.1em;
+        line-height: 1.4; /* 줄간격도 조금 줄임 */
+        background: linear-gradient(
+          to right,
+          #ffffff 0%,
+          #ffffff 10%,
+          #00ff44 30%,
+          #00ff44 100%
+        );
+      }
+      h1,
+      h2,
+      h3,
+      p,
+      ul,
+      ol {
+        margin-top: 0.1em; /* 위쪽 여백 */
+        margin-bottom: 0.1em;
+      }
+      li {
+        margin: 0.2em 0; /* 리스트 항목 간격도 줄임 */
+      }
+      small {
+        font-size: 0.85em; /* 보조 텍스트는 조금 작게 */
+      }
+    </style>
     <meta charset="utf-8" />
     <title>도현우 - 소개 (RAW HTML + Float)</title>
   </head>
   <body>
     <!-- 아주 최소한의, 날것의 HTML. (CSS 거의 없음) -->
 
-    <h1>도현우 (D5)</h1>
+    <h1>도현우</h1>
     <p>
-      상명대학교 커뮤니케이션디자인전공. 브랜딩, 편집디자인, 타이포그래피,
-      p5.js.
+      상명대학교 커뮤니케이션디자인전공.
+      <br />
+      브랜딩, 편집디자인, 타이포그래피, p5.js.
     </p>
 
-    <hr />
+    <hr class="full" />
 
     <h2>프로젝트 하이라이트</h2>
+    <hr
+      style="border: 0; height: 1px; background: #000; width: 5%; margin: 0"
+    />
     <ul>
       <li>
-        <a href="https://example.com/minmax" target="_blank"
+        <a href="https://dohywu.github.io/minmax-online" target="_blank"
           >minMAX — 미니멀에서 맥시멀로</a
         ><br />
         <small>아카이브 북. 재질·중첩 실험.</small>
       </li>
       <li>
-        <a href="https://example.com/digital-candle" target="_blank"
+        <a href="https://dohywu.github.io/bgc251fin" target="_blank"
           >Digital Candle — 인터랙티브 촛불</a
         ><br />
         <small>얼굴 제스처로 메시지가 열리는 웹 실험.</small>
       </li>
-      <li>
-        <a href="https://example.com/cardnews" target="_blank"
-          >Club PR — 카드뉴스</a
-        ><br />
-        <small>반복 가능한 정보 구조 템플릿.</small>
-      </li>
     </ul>
 
-    <hr />
+    <hr class="full" />
 
     <h2>더 보기</h2>
+    <hr
+      style="border: 0; height: 1px; background: #000; width: 5%; margin: 0"
+    />
     <ul>
       <li>
         <a href="https://example.com/d5" target="_blank"
@@ -58,37 +98,33 @@
       </li>
     </ul>
 
-    <hr />
+    <hr class="full" />
 
     <h2>간단 타임라인</h2>
+    <hr
+      style="border: 0; height: 1px; background: #000; width: 5%; margin: 0"
+    />
     <ol>
       <li>2023–2024: 클럽/브랜딩/카드뉴스.</li>
       <li>2024–2025: p5.js 확장, 전시/발표, d5 정리.</li>
       <li>Next: 브랜딩×인터랙티브 접점 연구.</li>
     </ol>
 
-    <hr />
+    <hr class="full" />
 
     <h2>연락</h2>
-    <ul>
-      <li>
-        이메일:
-        <a href="mailto:your.email@example.com">your.email@example.com</a>
-      </li>
-      <li>
-        인스타그램:
-        <a href="https://instagram.com/your_handle" target="_blank"
-          >@your_handle</a
-        >
-      </li>
-      <li>
-        GitHub:
-        <a href="https://github.com/your-github" target="_blank">your-github</a>
-      </li>
-    </ul>
+    <p>
+      이메일: <a href="mailto:your.email@example.com">your.email@example.com</a
+      ><br />
+      인스타그램:
+      <a href="https://instagram.com/your_handle" target="_blank"
+        >@your_handle</a
+      ><br />
+      GitHub:
+      <a href="https://github.com/your-github" target="_blank">your-github</a>
+    </p>
 
-    <hr />
-    <p><small>© 2025 Dohyunwoo · RAW HTML</small></p>
+    <hr class="full" />
 
     <!-- ===================== -->
     <!-- 중앙 '둥실둥실' 3D 구형 플로팅 이미지 -->
@@ -104,14 +140,26 @@
       // 최소 JS만 사용. 외부 라이브러리 없음.
       // 1) 여기에 이미지 링크들을 채워 주세요.
       //    예: "https://...jpg" 형태. 비워두면 회색 플레이스홀더 사각형이 나옵니다.
-      const imageLinks = ['', '', '', '', '', '', '', '', '', ''];
+      const imageLinks = [
+        'https://dohywu.github.io/HBIA3141_W1/src/img/1.png',
+        'https://dohywu.github.io/HBIA3141_W1/src/img/2.png',
+        'https://dohywu.github.io/HBIA3141_W1/src/img/3.png',
+        'https://dohywu.github.io/HBIA3141_W1/src/img/4.png',
+        'https://dohywu.github.io/HBIA3141_W1/src/img/5.png',
+        'https://dohywu.github.io/HBIA3141_W1/src/img/6.png',
+        'https://dohywu.github.io/HBIA3141_W1/src/img/7.png',
+        'https://dohywu.github.io/HBIA3141_W1/src/img/8.png',
+        'https://dohywu.github.io/HBIA3141_W1/src/img/9.png',
+        'https://dohywu.github.io/HBIA3141_W1/src/img/10.png',
+        'https://dohywu.github.io/HBIA3141_W1/src/img/11.png',
+      ];
 
       // 2) 구 설정값 (필요하면 숫자만 바꾸세요)
       const COUNT = imageLinks.length; // 이미지 개수
       const RADIUS = Math.min(window.innerWidth, window.innerHeight) * 0.28; // 구 반지름(px)
       const SIZE_MIN = 90; // 이미지 최소 너비(px)
-      const SIZE_MAX = 140; // 이미지 최대 너비(px)
-      const DEPTH = 600; // Z투영 기준(카메라 거리)
+      const SIZE_MAX = 500; // 이미지 최대 너비(px)
+      const DEPTH = 1000; // Z투영 기준(카메라 거리)
 
       // 상태값
       let rotX = 0; // X축 회전 각도(라디안)
@@ -143,9 +191,17 @@
         }); // 골든 스파이럴로 균등 분포
       }
 
-      // 윈도우 중앙 좌표
+      // 기존
+      // function center() {
+      //   return { cx: window.innerWidth / 2, cy: window.innerHeight / 2 };
+      // }
+
+      // 변경: 화면의 70% 가로 위치, 50% 세로 위치를 중심으로 사용
       function center() {
-        return { cx: window.innerWidth / 2, cy: window.innerHeight / 2 };
+        return {
+          cx: window.innerWidth * 0.6, // ← 여기 값(0.7)을 0~1 사이에서 조절하면 좌우 위치 변경
+          cy: window.innerHeight * 0.5, // ← 위아래 이동 원하면 이 값도 조절(예: 0.45)
+        };
       }
 
       // 마우스 이동 → 회전 속도에 반영 (아주 가볍게)
