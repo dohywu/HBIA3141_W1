@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko">
   <head>
+    <meta charset="utf-8" />
+    <title>도현우 - 소개 (RAW HTML + Float)</title>
     <style>
       hr.full {
         border: 0;
@@ -13,9 +15,9 @@
       }
       body {
         margin: 0;
-        margin-top: 0.2em; /* 위쪽 여백 */
+        margin-top: 0.2em;
         margin-bottom: 0.1em;
-        line-height: 1.4; /* 줄간격도 조금 줄임 */
+        line-height: 1.4;
         background: linear-gradient(
           to right,
           #ffffff 0%,
@@ -23,6 +25,7 @@
           #00ff44 30%,
           #00ff44 100%
         );
+        transition: background 3s ease, color 0.6s ease;
       }
       h1,
       h2,
@@ -30,34 +33,150 @@
       p,
       ul,
       ol {
-        margin-top: 0.1em; /* 위쪽 여백 */
+        margin-top: 0.1em;
         margin-bottom: 0.1em;
       }
       li {
-        margin: 0.2em 0; /* 리스트 항목 간격도 줄임 */
+        margin: 0.2em 0;
       }
       small {
-        font-size: 0.85em; /* 보조 텍스트는 조금 작게 */
+        font-size: 0.85em;
+      }
+      /* Night mode overrides */
+      body[data-theme='night'] {
+        background:
+          /* 작은 별 몇 개 (아주 은은) */ radial-gradient(
+            1px 1px at 12% 22%,
+            rgba(255, 255, 255, 0.35),
+            transparent 60%
+          ),
+          radial-gradient(
+            1px 1px at 28% 78%,
+            rgba(255, 255, 255, 0.25),
+            transparent 60%
+          ),
+          radial-gradient(
+            1px 1px at 66% 32%,
+            rgba(255, 255, 255, 0.3),
+            transparent 60%
+          ),
+          radial-gradient(
+            1px 1px at 88% 58%,
+            rgba(255, 255, 255, 0.2),
+            transparent 60%
+          ),
+          /* 밤 그라데이션 (네이비→인디고→딥그린) */
+            linear-gradient(
+              120deg,
+              #04070f 0%,
+              #0b1020 35%,
+              #1a2458 62%,
+              #0a2c1b 100%
+            );
+        color: #fff;
+        background-attachment: fixed; /* 스크롤 시 배경 고정 */
+      }
+      /* Inline hr backgrounds are black; force to white at night */
+      body[data-theme='night'] hr {
+        background: #fff !important;
+      }
+      /* Links readable on dark */
+      body[data-theme='night'] a {
+        color: #fff;
+      }
+      hr {
+        transition: background 3s ease;
+      }
+      /* ===== Night moon (top-right) ===== */
+      #moon {
+        position: fixed;
+        top: 30px;
+        right: 30px;
+        width: 96px;
+        height: 96px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle at 30% 30%,
+          #ffffff 0%,
+          #f5f7ff 40%,
+          #d4d9ff 65%,
+          #b0b8ff 100%
+        );
+        box-shadow: 0 0 12px rgba(255, 255, 255, 0.75),
+          0 0 32px rgba(176, 184, 255, 0.35);
+        opacity: 0; /* hidden by default (day) */
+        pointer-events: none; /* do not block clicks */
+        z-index: 1; /* below name-splash (z=2), above backgrounds */
+        transform: translateY(0);
+        transition: opacity 0.6s ease, transform 1.2s ease;
+      }
+      /* subtle craters */
+      #moon::before,
+      #moon::after {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle at 40% 40%,
+          rgba(0, 0, 0, 0.12),
+          rgba(0, 0, 0, 0) 70%
+        );
+        filter: blur(0.2px);
+      }
+      #moon::before {
+        width: 21px;
+        height: 21px;
+        left: 27px;
+        top: 30px;
+      }
+      #moon::after {
+        width: 15px;
+        height: 15px;
+        left: 54px;
+        top: 51px;
+      }
+
+      @keyframes moonFloat {
+        0% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-4px);
+        }
+        100% {
+          transform: translateY(0);
+        }
+      }
+      /* show moon only at night */
+      body[data-theme='night'] #moon {
+        opacity: 1;
+        animation: moonFloat 6s ease-in-out infinite;
       }
     </style>
-    <meta charset="utf-8" />
-    <title>도현우 - 소개 (RAW HTML + Float)</title>
   </head>
   <body>
-    <!-- 아주 최소한의, 날것의 HTML. (CSS 거의 없음) -->
-
+    <!-- 이름 애니메이션 캔버스 (z-index 가장 위) -->
+    <div
+      id="name-splash"
+      style="position: relative; height: 360px; margin: 6px 0; z-index: 2"
+    >
+      <canvas
+        id="nameCanvas"
+        style="width: 100%; height: 100%; display: block"
+      ></canvas>
+    </div>
     <h1>도현우</h1>
     <p>
-      상명대학교 커뮤니케이션디자인전공.
-      <br />
+      21살.<br />
+      상명대학교 디자인학부 커뮤니케이션디자인전공. <br />
       브랜딩, 편집디자인, 타이포그래피, p5.js.
     </p>
 
     <hr class="full" />
 
-    <h2>프로젝트 하이라이트</h2>
+    <h2>웹 기반의 디자인 프로젝트</h2>
     <hr
-      style="border: 0; height: 1px; background: #000; width: 5%; margin: 0"
+      style="border: 0; height: 1px; background: #000; width: 20%; margin: 0"
     />
     <ul>
       <li>
@@ -70,76 +189,271 @@
         <a href="https://dohywu.github.io/bgc251fin" target="_blank"
           >Digital Candle — 인터랙티브 촛불</a
         ><br />
-        <small>얼굴 제스처로 메시지가 열리는 웹 실험.</small>
+        <small>얼굴 제스처로 촛불을 끄는 실험.</small>
       </li>
     </ul>
 
     <hr class="full" />
 
-    <h2>더 보기</h2>
+    <h2>관심있는 디자인 분야</h2>
     <hr
-      style="border: 0; height: 1px; background: #000; width: 5%; margin: 0"
+      style="border: 0; height: 1px; background: #000; width: 20%; margin: 0"
     />
     <ul>
+      <li>브랜딩</li>
       <li>
-        <a href="https://example.com/d5" target="_blank"
-          >d5 스튜디오 아이덴티티</a
-        >
-      </li>
-      <li>
-        <a href="https://example.com/typo" target="_blank"
-          >타이포그래피 아카이빙</a
-        >
-      </li>
-      <li>
-        <a href="https://example.com/p5" target="_blank"
-          >제너러티브 아트 모음</a
+        <a href="https://dohywu.github.io/HBIA3141_W1/vfx.html" target="_blank"
+          >VFX</a
         >
       </li>
     </ul>
 
     <hr class="full" />
 
-    <h2>간단 타임라인</h2>
+    <h2>일대기</h2>
     <hr
-      style="border: 0; height: 1px; background: #000; width: 5%; margin: 0"
+      style="border: 0; height: 1px; background: #000; width: 20%; margin: 0"
     />
     <ol>
-      <li>2023–2024: 클럽/브랜딩/카드뉴스.</li>
-      <li>2024–2025: p5.js 확장, 전시/발표, d5 정리.</li>
-      <li>Next: 브랜딩×인터랙티브 접점 연구.</li>
+      <li>Dec 2005: 탄생</li>
+      <li>Feb 2024: 상명대학교 입학</li>
+      <li>Jul 2024: ORGD 2024 전시</li>
+      <li>Feb 2025: Design Facotry 성수동 전시</li>
+    </ol>
+
+    <hr class="full" />
+
+    <h2>나에대해서..</h2>
+    <hr
+      style="border: 0; height: 1px; background: #000; width: 20%; margin: 0"
+    />
+    <ol>
+      <li id="toggleNight" style="cursor: pointer; text-decoration: underline">
+        밤낮이 자주 바뀜
+      </li>
+      <li>마라탕을 좋아함</li>
     </ol>
 
     <hr class="full" />
 
     <h2>연락</h2>
+    <hr
+      style="border: 0; height: 1px; background: #000; width: 20%; margin: 0"
+    />
     <p>
-      이메일: <a href="mailto:your.email@example.com">your.email@example.com</a
-      ><br />
+      이메일: <a href="mailto:dohywu@example.com">dohywu@gmail.com</a><br />
       인스타그램:
-      <a href="https://instagram.com/your_handle" target="_blank"
-        >@your_handle</a
+      <a href="https://instagram.com/byd5hw" target="_blank">@byd5hw</a><br />
+      인스타그램:
+      <a href="https://instagram.com/dohyeonwoo" target="_blank">@dohyeonwoo</a
       ><br />
       GitHub:
-      <a href="https://github.com/your-github" target="_blank">your-github</a>
+      <a href="https://github.com/dohywu" target="_blank">dohywu-Github</a>
     </p>
 
     <hr class="full" />
 
-    <!-- ===================== -->
-    <!-- 중앙 '둥실둥실' 3D 구형 플로팅 이미지 -->
-    <!-- ===================== -->
+    <!-- 배경 가독성 보조: 마우스 스포트라이트 페인트 캔버스 -->
+    <canvas
+      id="paintCanvas"
+      style="
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+        display: block;
+        pointer-events: none;
+        z-index: -1;
+      "
+    ></canvas>
+    <!-- 마우스 따라 점 페인트 (2초 간격, 주황/레드, 10px, 50% 투명) -->
+    <canvas
+      id="dotCanvas"
+      style="
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+        display: block;
+        pointer-events: none;
+        z-index: -1;
+      "
+    ></canvas>
+
+    <!-- 3D 플로팅 이미지 레이어 (z-index 아래로) -->
     <div
       id="floaters"
-      style="position: fixed; inset: 0; display: block; pointer-events: none"
-    >
-      <!-- JS가 이미지 요소들을 생성/배치합니다. 이 레이어는 클릭을 막지 않습니다. -->
-    </div>
+      style="
+        position: fixed;
+        inset: 0;
+        display: block;
+        pointer-events: none;
+        z-index: -2;
+      "
+    ></div>
+    <div id="moon" aria-hidden="true"></div>
 
     <script>
-      // 최소 JS만 사용. 외부 라이브러리 없음.
-      // 1) 여기에 이미지 링크들을 채워 주세요.
-      //    예: "https://...jpg" 형태. 비워두면 회색 플레이스홀더 사각형이 나옵니다.
+      // ======================
+      // 배경 스포트라이트 페인트 (가독성 보조)
+      // - 전체 배경을 살짝 어둡게 하고, 마우스 주변은 밝게 보이도록 구멍을 뚫는 방식
+      // - 텍스트/콘텐츠는 이 캔버스 위에 있으므로 가독성 ↑
+      // ======================
+      (function () {
+        const cvs = document.getElementById('paintCanvas');
+        if (!cvs) return;
+        const ctx = cvs.getContext('2d');
+        let dpr = window.devicePixelRatio || 1;
+
+        function fit() {
+          const w = Math.floor(window.innerWidth * dpr);
+          const h = Math.floor(window.innerHeight * dpr);
+          if (cvs.width !== w || cvs.height !== h) {
+            cvs.width = w;
+            cvs.height = h;
+          }
+          // 좌표계를 CSS 픽셀 기준으로 맞춤
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+        fit();
+        window.addEventListener('resize', fit);
+
+        let mx = window.innerWidth * 0.6; // 초기값: 오른쪽으로 살짝
+        let my = window.innerHeight * 0.5;
+        let sx = mx,
+          sy = my; // 스무딩된 위치
+
+        window.addEventListener('mousemove', (e) => {
+          mx = e.clientX;
+          my = e.clientY;
+        });
+
+        // 테마에 따라 어두워지는 강도 변경
+        function getDarkAlpha() {
+          return document.body.getAttribute('data-theme') === 'night'
+            ? 0.18
+            : 0.1;
+        }
+        // const DARK_ALPHA = 0.1; // 배경 어둡게 정도 (0.08~0.12 권장)
+        const R_INNER = 120; // 스포트라이트 중심부 반경
+        const R_OUTER = 260; // 스포트라이트 외곽 반경 (부드러운 경계)
+
+        function draw() {
+          // 위치 스무딩: 가속도 느낌 줄임
+          sx += (mx - sx) * 0.15;
+          sy += (my - sy) * 0.15;
+
+          // 캔버스 초기화 (완전 지우기)
+          ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+          // 1) 전체를 살짝 어둡게 (검정 투명 막)
+          ctx.globalCompositeOperation = 'source-over';
+          ctx.fillStyle = `rgba(0,0,0,${getDarkAlpha()})`;
+          ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+          // 2) 마우스 주변만 구멍(밝게 보이도록)
+          //    destination-out: 기존 어둡게 레이어를 파낸다
+          const g = ctx.createRadialGradient(sx, sy, R_INNER, sx, sy, R_OUTER);
+          g.addColorStop(0, 'rgba(0,0,0,1)');
+          g.addColorStop(1, 'rgba(0,0,0,0)');
+          ctx.globalCompositeOperation = 'destination-out';
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.arc(sx, sy, R_OUTER, 0, Math.PI * 2);
+          ctx.fill();
+
+          // 3) 합성 모드 원상복구
+          ctx.globalCompositeOperation = 'source-over';
+          requestAnimationFrame(draw);
+        }
+        requestAnimationFrame(draw);
+      })();
+    </script>
+    <script>
+      // ======================
+      // 마우스 따라 점 페인트 (2초마다 10px 원, 50% 투명 → 1초간 서서히 0으로 페이드 후 삭제)
+      // ======================
+      (function () {
+        const cvs = document.getElementById('dotCanvas');
+        if (!cvs) return;
+        const ctx = cvs.getContext('2d');
+        const dpr = window.devicePixelRatio || 1;
+
+        function fit() {
+          const w = Math.floor(window.innerWidth * dpr);
+          const h = Math.floor(window.innerHeight * dpr);
+          if (cvs.width !== w || cvs.height !== h) {
+            cvs.width = w;
+            cvs.height = h;
+          }
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // CSS px 기준
+        }
+        fit();
+        window.addEventListener('resize', fit);
+
+        let mx = window.innerWidth * 0.6;
+        let my = window.innerHeight * 0.5;
+        window.addEventListener('mousemove', (e) => {
+          mx = e.clientX;
+          my = e.clientY;
+        });
+
+        const COLORS = [
+          '#FF0000',
+          '#FF2D00',
+          '#FF3B30',
+          '#FF5E00',
+          '#FF6A00',
+          '#FF9500',
+        ];
+        const RADIUS = 6; // 12px 지름 (가시성 ↑)
+        const ALPHA0 = 0.7; // 시작 투명도 70% (배경 대비 ↑)
+        const LIFE = 2000; // 2초 동안 천천히 페이드 (스폰 간격과 맞춤)
+
+        const dots = []; // {x,y,color,ts}
+
+        function dropDot() {
+          dots.push({
+            x: mx,
+            y: my,
+            color: COLORS[Math.floor(Math.random() * COLORS.length)],
+            ts: performance.now(),
+          });
+        }
+
+        function draw() {
+          ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+          const now = performance.now();
+          for (let i = 0; i < dots.length; i++) {
+            const d = dots[i];
+            const t = now - d.ts;
+            if (t >= LIFE) continue; // 그리진 않지만 필터링은 루프 뒤에서 처리
+            const a = ALPHA0 * Math.max(0, 1 - t / LIFE); // 선형 페이드
+            ctx.save();
+            ctx.globalAlpha = a;
+            ctx.fillStyle = d.color;
+            ctx.beginPath();
+            ctx.arc(d.x, d.y, RADIUS, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
+          // 수명 끝난 점 제거
+          for (let i = dots.length - 1; i >= 0; i--) {
+            if (now - dots[i].ts >= LIFE) dots.splice(i, 1);
+          }
+          requestAnimationFrame(draw);
+        }
+        requestAnimationFrame(draw);
+
+        // 2초 간격으로 점 생성
+        setInterval(dropDot, 10);
+      })();
+    </script>
+
+    <script>
+      /* ======================
+       3D 구형 플로팅 이미지
+       ====================== */
       const imageLinks = [
         'https://dohywu.github.io/HBIA3141_W1/src/img/1.png',
         'https://dohywu.github.io/HBIA3141_W1/src/img/2.png',
@@ -153,21 +467,16 @@
         'https://dohywu.github.io/HBIA3141_W1/src/img/10.png',
         'https://dohywu.github.io/HBIA3141_W1/src/img/11.png',
       ];
+      const COUNT = imageLinks.length;
+      const RADIUS = Math.min(window.innerWidth, window.innerHeight) * 0.28;
+      const SIZE_MIN = 90,
+        SIZE_MAX = 500,
+        DEPTH = 1000;
 
-      // 2) 구 설정값 (필요하면 숫자만 바꾸세요)
-      const COUNT = imageLinks.length; // 이미지 개수
-      const RADIUS = Math.min(window.innerWidth, window.innerHeight) * 0.28; // 구 반지름(px)
-      const SIZE_MIN = 90; // 이미지 최소 너비(px)
-      const SIZE_MAX = 500; // 이미지 최대 너비(px)
-      const DEPTH = 1000; // Z투영 기준(카메라 거리)
-
-      // 상태값
-      let rotX = 0; // X축 회전 각도(라디안)
-      let rotY = 0; // Y축 회전 각도(라디안)
-      let velX = 0; // 마우스에 의해 생긴 회전 속도
-      let velY = 0;
-
-      // 요소 만들기
+      let rotX = 0,
+        rotY = 0,
+        velX = 0,
+        velY = 0;
       const wrap = document.getElementById('floaters');
       const items = [];
       for (let i = 0; i < COUNT; i++) {
@@ -176,88 +485,57 @@
         el.loading = 'lazy';
         el.alt = 'image';
         el.src = imageLinks[i] || '';
-        // 아주 최소한의 인라인 스타일만 사용
         el.style.position = 'absolute';
         el.style.transformOrigin = 'center center';
-        el.style.willChange = 'transform, opacity';
+        el.style.willChange = 'transform,opacity';
         el.style.border = imageLinks[i] ? 'none' : '1px solid #ccc';
         el.style.background = imageLinks[i] ? 'transparent' : '#eee';
-        el.style.pointerEvents = 'none'; // 아래 콘텐츠 클릭 가능
+        el.style.pointerEvents = 'none';
         wrap.appendChild(el);
         items.push({
           el,
           theta: Math.acos((2 * (i + 0.5)) / COUNT - 1),
           phi: Math.PI * (1 + Math.sqrt(5)) * i,
-        }); // 골든 스파이럴로 균등 분포
+        });
       }
-
-      // 기존
-      // function center() {
-      //   return { cx: window.innerWidth / 2, cy: window.innerHeight / 2 };
-      // }
-
-      // 변경: 화면의 70% 가로 위치, 50% 세로 위치를 중심으로 사용
       function center() {
-        return {
-          cx: window.innerWidth * 0.6, // ← 여기 값(0.7)을 0~1 사이에서 조절하면 좌우 위치 변경
-          cy: window.innerHeight * 0.5, // ← 위아래 이동 원하면 이 값도 조절(예: 0.45)
-        };
+        return { cx: window.innerWidth * 0.6, cy: window.innerHeight * 0.5 };
       }
-
-      // 마우스 이동 → 회전 속도에 반영 (아주 가볍게)
       window.addEventListener('mousemove', (e) => {
         const { cx, cy } = center();
-        const nx = (e.clientX - cx) / cx; // -1~1
-        const ny = (e.clientY - cy) / cy; // -1~1
-        // 부드럽게 반영 (감쇠 포함)
-        velY = nx * 0.015; // 좌우 → Y축 회전
-        velX = -ny * 0.015; // 상하 → X축 회전
+        const nx = (e.clientX - cx) / cx,
+          ny = (e.clientY - cy) / cy;
+        velY = nx * 0.015;
+        velX = -ny * 0.015;
       });
-
-      // 반응성: 리사이즈 시 반지름 재계산
       window.addEventListener('resize', () => {
-        const newR = Math.min(window.innerWidth, window.innerHeight) * 0.28;
-        radius.current = newR;
+        radius.current = Math.min(window.innerWidth, window.innerHeight) * 0.28;
       });
       const radius = { current: RADIUS };
-
-      // 애니메이션 루프
       function tick() {
         rotX += velX;
         rotY += velY;
-        velX *= 0.94; // 관성 감쇠
+        velX *= 0.94;
         velY *= 0.94;
-
         const { cx, cy } = center();
-
         for (let i = 0; i < COUNT; i++) {
           const it = items[i];
-          // 구 좌표
           const x0 = radius.current * Math.sin(it.theta) * Math.cos(it.phi);
           const y0 = radius.current * Math.cos(it.theta);
           const z0 = radius.current * Math.sin(it.theta) * Math.sin(it.phi);
-
-          // 회전 행렬 (XYZ 중 X, Y만 사용)
           const cosX = Math.cos(rotX),
             sinX = Math.sin(rotX);
           const cosY = Math.cos(rotY),
             sinY = Math.sin(rotY);
-
-          // Y 회전
-          let x1 = cosY * x0 + sinY * z0;
-          let y1 = y0;
-          let z1 = -sinY * x0 + cosY * z0;
-          // X 회전
-          let x2 = x1;
-          let y2 = cosX * y1 - sinX * z1;
-          let z2 = sinX * y1 + cosX * z1;
-
-          // 원근 투영
+          let x1 = cosY * x0 + sinY * z0,
+            y1 = y0,
+            z1 = -sinY * x0 + cosY * z0;
+          let x2 = x1,
+            y2 = cosX * y1 - sinX * z1,
+            z2 = sinX * y1 + cosX * z1;
           const scale = DEPTH / (DEPTH - z2);
-          const x = cx + x2 * scale;
-          const y = cy + y2 * scale;
-
-          // 크기/투명도: z 기반
+          const x = cx + x2 * scale,
+            y = cy + y2 * scale;
           const w = Math.round(
             SIZE_MIN +
               (SIZE_MAX - SIZE_MIN) *
@@ -265,18 +543,179 @@
           );
           const opacity =
             0.35 + 0.65 * ((z2 + radius.current) / (2 * radius.current));
-
           it.el.style.width = w + 'px';
           it.el.style.left = x - w / 2 + 'px';
           it.el.style.top = y - w / 2 + 'px';
           it.el.style.opacity = opacity.toFixed(3);
         }
-
         requestAnimationFrame(tick);
       }
-
-      // 시작
       requestAnimationFrame(tick);
+    </script>
+
+    <script>
+      /* ======================
+       이름 점 모션 (DO HYEONWOO)
+       ====================== */
+      (function () {
+        const CANVAS = document.getElementById('nameCanvas');
+        if (!CANVAS) return;
+        const CTX = CANVAS.getContext('2d');
+        const dpr = window.devicePixelRatio || 1;
+
+        function fitCanvas() {
+          const rect = CANVAS.getBoundingClientRect();
+          CANVAS.width = Math.floor(rect.width * dpr);
+          CANVAS.height = Math.floor(rect.height * dpr);
+          CTX.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+        fitCanvas();
+        window.addEventListener('resize', fitCanvas);
+
+        const TEXT = 'DO HYEONWOO';
+        function makeTargets() {
+          const W = CANVAS.clientWidth,
+            H = CANVAS.clientHeight;
+          const off = document.createElement('canvas');
+          off.width = W;
+          off.height = H;
+          const octx = off.getContext('2d');
+
+          const MARGIN_X = 20; // 왼쪽 여백 20px
+
+          // 폰트 크기: 가로/세로 모두 고려(세로의 50% 이내)
+          const fontSize = Math.max(
+            40,
+            Math.min(Math.floor(W * 0.13), Math.floor(H * 0.44))
+          );
+          octx.clearRect(0, 0, W, H);
+          octx.fillStyle = '#000';
+          octx.textAlign = 'left'; // ← 왼쪽 정렬
+          octx.textBaseline = 'middle';
+          octx.font = `700 ${fontSize}px system-ui, -apple-system, Arial, sans-serif`;
+          octx.fillText(TEXT, MARGIN_X, H * 0.46); // ← X=20px 여백, 세로는 동일
+
+          const gap = 5;
+          const data = octx.getImageData(0, 0, W, H).data;
+          const pts = [];
+          for (let y = 0; y < H; y += gap) {
+            for (let x = 0; x < W; x += gap) {
+              const a = data[(y * W + x) * 4 + 3];
+              if (a > 32) pts.push({ x, y });
+            }
+          }
+          const MAX = 900;
+          if (pts.length > MAX) {
+            const step = Math.floor(pts.length / MAX);
+            return pts.filter((_, i) => i % step === 0).slice(0, MAX);
+          }
+          return pts;
+        }
+
+        let targets = makeTargets();
+        const particles = targets.map((t) => ({
+          x: Math.random() * CANVAS.clientWidth,
+          y: Math.random() * CANVAS.clientHeight,
+          vx: 0,
+          vy: 0,
+          tx: t.x,
+          ty: t.y,
+          ox: 0,
+          oy: 0,
+        }));
+
+        let gather = true;
+        setInterval(() => {
+          gather = !gather;
+        }, 2600);
+
+        let mx = CANVAS.clientWidth * 0.5,
+          my = CANVAS.clientHeight * 0.5;
+        window.addEventListener('mousemove', (e) => {
+          const r = CANVAS.getBoundingClientRect();
+          mx = e.clientX - r.left;
+          my = e.clientY - r.top;
+        });
+
+        window.addEventListener('resize', () => {
+          targets = makeTargets();
+          const N = Math.min(particles.length, targets.length);
+          for (let i = 0; i < N; i++) {
+            particles[i].tx = targets[i].x;
+            particles[i].ty = targets[i].y;
+          }
+          for (let i = N; i < targets.length; i++) {
+            particles.push({
+              x: Math.random() * CANVAS.clientWidth,
+              y: Math.random() * CANVAS.clientHeight,
+              vx: 0,
+              vy: 0,
+              tx: targets[i].x,
+              ty: targets[i].y,
+              ox: 0,
+              oy: 0,
+            });
+          }
+          particles.length = targets.length;
+        });
+
+        function step() {
+          CTX.clearRect(0, 0, CANVAS.clientWidth, CANVAS.clientHeight);
+          for (const p of particles) {
+            if (!gather && Math.abs(p.ox) + Math.abs(p.oy) < 1) {
+              const ang = Math.random() * Math.PI * 2;
+              const dist = 30 + Math.random() * 90;
+              p.ox = Math.cos(ang) * dist;
+              p.oy = Math.sin(ang) * dist;
+            }
+            if (gather) {
+              p.ox *= 0.92;
+              p.oy *= 0.92;
+            }
+
+            let gx = p.tx + (gather ? 0 : p.ox);
+            let gy = p.ty + (gather ? 0 : p.oy);
+
+            const dxm = (mx - CANVAS.clientWidth * 0.5) * 0.02;
+            const dym = (my - CANVAS.clientHeight * 0.5) * 0.02;
+            gx += dxm;
+            gy += dym;
+
+            const ax = (gx - p.x) * 0.07,
+              ay = (gy - p.y) * 0.07;
+            p.vx = (p.vx + ax) * 0.86;
+            p.vy = (p.vy + ay) * 0.86;
+            p.x += p.vx;
+            p.y += p.vy;
+
+            CTX.fillStyle =
+              document.body.getAttribute('data-theme') === 'night'
+                ? '#fff'
+                : '#000';
+            CTX.fillRect(p.x, p.y, 2, 2);
+          }
+          requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      })();
+    </script>
+    <script>
+      // 밤/낮 전환 토글 ("나에대해서.." 항목 클릭)
+      (function () {
+        const btn = document.getElementById('toggleNight');
+        if (!btn) return;
+        function setTheme(mode) {
+          if (mode === 'night') {
+            document.body.setAttribute('data-theme', 'night');
+          } else {
+            document.body.removeAttribute('data-theme');
+          }
+        }
+        btn.addEventListener('click', () => {
+          const isNight = document.body.getAttribute('data-theme') === 'night';
+          setTheme(isNight ? 'day' : 'night');
+        });
+      })();
     </script>
   </body>
 </html>
